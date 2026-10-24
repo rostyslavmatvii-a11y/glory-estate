@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Контакти — Glory Estate</title>
+  <meta name="description" content="Офіс агенції нерухомості Glory Estate в Києві: телефон, адреса, години роботи, команда агентів.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="assets/js/theme.js"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="contacts">
+  <div id="header"></div>
+
+  <main class="container">
+    <div class="crumbs"><a href="index.html">Головна</a> / Контакти</div>
+    <div class="section-head reveal"><div><span class="eyebrow">Контакти</span><h1 style="font-size:clamp(1.8rem,3.5vw,2.8rem)">Приходьте на каву — <em>або просто подзвоніть</em></h1></div></div>
+
+    <div class="contacts">
+      <div class="contact-list" id="list"></div>
+      <div class="box reveal" id="formBox"></div>
+    </div>
+
+    <section class="section">
+      <div class="section-head reveal"><div><span class="eyebrow">Команда</span><h2>Ваші агенти</h2></div>
+        <p>Кожен працює зі своїм напрямком і знає ринок районів до квартири.</p></div>
+      <div class="team" id="team"></div>
+    </section>
+
+    <div class="map reveal" style="aspect-ratio:21/8"><iframe title="Офіс на карті" width="100%" height="100%" style="border:0" loading="lazy" id="map"></iframe></div>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    const { $, icon, bindForm, leadForm, reveal } = UI;
+    const A = AGENCY;
+    $('#list').innerHTML = [
+      ['phone', 'Телефон', `<a href="tel:${A.phoneHref}">${A.phone}</a>`],
+      ['mail', 'Email', `<a href="mailto:${A.email}">${A.email}</a>`],
+      ['pin', 'Офіс', A.address],
+      ['clock', 'Години роботи', A.hours],
+      ['send', 'Месенджери', `<a href="${A.telegram}">Telegram</a> · <a href="${A.viber}">Viber</a> · <a href="${A.instagram}">Instagram</a>`],
+    ].map(([i, t, v]) => `<div class="contact-item reveal"><span class="ico">${icon(i, 22)}</span><div><b>${t}</b><div class="muted">${v}</div></div></div>`).join('');
+    $('#formBox').innerHTML = leadForm('Напишіть нам', `
+      <div class="field"><label>Що вас цікавить</label><select name="topic"><option>Купити</option><option>Продати</option><option>Орендувати</option><option>Здати в оренду</option><option>Консультація юриста</option></select></div>`);
+    bindForm($('#formBox form'));
+    $('#team').innerHTML = AGENTS.map((a) => `<div class="member reveal"><div class="avatar">${a.initials}</div><b>${a.name}</b><p class="muted" style="font-size:.9rem;margin:4px 0 10px">${a.role}</p><a href="tel:${a.phone.replace(/[^\d+]/g, '')}">${a.phone}</a></div>`).join('');
+    $('#map').src = 'https://maps.google.com/maps?q=' + encodeURIComponent('Київ, Хрещатик') + '&z=14&output=embed';
+    reveal();
+  </script>
+</body>
+</html>

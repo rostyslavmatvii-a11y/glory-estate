@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glory Estate — агенція нерухомості в Києві</title>
+  <meta name="description" content="Купівля, продаж і оренда квартир, будинків і комерційної нерухомості в Києві та області. Юридична перевірка кожної угоди.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="assets/js/theme.js"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="home">
+  <div id="header"></div>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <span class="eyebrow">Київ і область · з 2014 року</span>
+          <h1>Знайдемо дім, у який <em>хочеться</em> повертатися</h1>
+          <p class="lead">Купівля, продаж і оренда нерухомості з юридичною перевіркою кожного об'єкта. Без зайвих переглядів і прихованих комісій.</p>
+          <div class="tabs" id="dealTabs" role="tablist">
+            <button class="on" data-deal="sale" role="tab">Купити</button>
+            <button data-deal="rent" role="tab">Орендувати</button>
+          </div>
+          <form class="search" id="heroSearch">
+            <div><label for="sCity">Місто</label><select id="sCity"></select></div>
+            <div><label for="sType">Тип</label><select id="sType"><option value="">Будь-який</option><option>Квартира</option><option>Будинок</option><option>Комерція</option></select></div>
+            <div><label for="sRooms">Кімнат</label><select id="sRooms"><option value="">Будь-яка</option><option>1</option><option>2</option><option>3</option><option value="4">4+</option></select></div>
+            <div><label for="sMax">Бюджет до</label><select id="sMax"></select></div>
+            <button class="btn btn-primary">Знайти</button>
+          </form>
+        </div>
+        <div class="hero-art reveal" id="heroArt"></div>
+      </div>
+    </section>
+
+    <section class="container">
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal">
+          <div><span class="eyebrow">Добірка тижня</span><h2>Нові та найкращі пропозиції</h2></div>
+          <a class="link-arrow" href="catalog.html">Увесь каталог <span id="arr1"></span></a>
+        </div>
+        <div class="grid" id="topGrid"></div>
+      </div>
+    </section>
+
+    <section class="section" style="background:var(--surface);border-block:1px solid var(--line)">
+      <div class="container">
+        <div class="section-head reveal"><div><span class="eyebrow">Послуги</span><h2>Беремо на себе всю угоду</h2></div>
+          <p>Від першого перегляду до ключів: оцінка, реклама, покази, перевірка документів, нотаріус і розрахунки.</p></div>
+        <div class="services" id="services"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head reveal"><div><span class="eyebrow">Як ми працюємо</span><h2>Чотири кроки до угоди</h2></div></div>
+        <div class="steps">
+          <div class="step reveal"><h3>Знайомство</h3><p class="muted">Розпитуємо про бюджет, район і терміни. 15 хвилин телефоном або в офісі.</p></div>
+          <div class="step reveal"><h3>Добірка</h3><p class="muted">Надсилаємо 5–10 перевірених варіантів з відео, без «мертвих» оголошень.</p></div>
+          <div class="step reveal"><h3>Покази</h3><p class="muted">Організовуємо перегляди в зручний час, наживо або онлайн.</p></div>
+          <div class="step reveal"><h3>Угода</h3><p class="muted">Перевірка документів, договір, нотаріус, безпечні розрахунки.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="section-head reveal"><div><span class="eyebrow">Відгуки</span><h2>Що кажуть клієнти</h2></div></div>
+        <div class="reviews" id="reviews"></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="section-head reveal"><div><span class="eyebrow">Партнери</span><h2>Від ключів до дому <em>мрії</em></h2></div>
+          <p>Купити — це половина справи. Разом із партнерами доведемо ваш новий дім до ідеалу.</p></div>
+        <div id="partners"></div>
+      </div>
+    </section>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="cta reveal">
+          <div>
+            <h2>Продаєте нерухомість?</h2>
+            <p class="muted">Безкоштовно оцінимо ринкову ціну за 24 години і розповімо, як продати швидше та дорожче.</p>
+          </div>
+          <div id="ctaForm"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="footer"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    const { $, $$, card, icon, art, bindForm, leadForm, money } = UI;
+    let deal = 'sale';
+    const cities = [...new Set(LISTINGS.map((p) => p.city))];
+    $('#sCity').innerHTML = '<option value="">Усі</option>' + cities.map((c) => `<option>${c}</option>`).join('');
+    const budgets = { sale: [2500000, 4000000, 6000000, 10000000], rent: [25000, 40000, 60000] };
+    const fillBudget = () => { $('#sMax').innerHTML = '<option value="">Будь-який</option>' + budgets[deal].map((b) => `<option value="${b}">${money(b)}</option>`).join(''); };
+    fillBudget();
+    $$('#dealTabs button').forEach((b) => b.onclick = () => {
+      deal = b.dataset.deal; $$('#dealTabs button').forEach((x) => x.classList.toggle('on', x === b)); fillBudget();
+    });
+    $('#heroSearch').onsubmit = (e) => {
+      e.preventDefault();
+      const q = new URLSearchParams({ deal });
+      if ($('#sCity').value) q.set('city', $('#sCity').value);
+      if ($('#sType').value) q.set('type', $('#sType').value);
+      if ($('#sRooms').value) q.set('rooms', $('#sRooms').value);
+      if ($('#sMax').value) q.set('max', $('#sMax').value);
+      location.href = 'catalog.html?' + q;
+    };
+
+    // міська забудова в кольорах поточної палітри, небо — як зараз у Києві; перемальовується при зміні палітри
+    const phaseIcon = { day: 'sun', dusk: 'sun', night: 'moon' }, phaseName = { day: 'день', dusk: 'захід сонця', night: 'ніч' };
+    let heroPhase;
+    const drawHero = () => {
+      const ph = heroPhase = UI.skyPhase();
+      $('#heroArt').innerHTML = UI.city(THEME.sceneColors()) + `
+        <div class="float f3">${icon(phaseIcon[ph], 18)}<div>Київ, <span id="kyivNow">${UI.kyivTime()}</span> · ${phaseName[ph]}</div></div>
+        <div class="float f1">${icon('shield', 22)}<div><b>100% угод</b>з юридичною перевіркою</div></div>
+        <div class="float f2">${icon('key', 22)}<div><b>21 день</b>середній термін продажу</div></div>`;
+    };
+    drawHero();
+    document.addEventListener('palettechange', drawHero);
+    // щохвилини оновлюємо годинник; малюнок — лише коли змінилася пора доби (щоб літери не спалахували щоразу)
+    setInterval(() => { if (UI.skyPhase() !== heroPhase) drawHero(); else $('#kyivNow').textContent = UI.kyivTime(); }, 60000);
+    $('#stats').innerHTML = AGENCY.stats.map((s) => `<div class="stat reveal"><b>${s.value}</b><span class="muted">${s.label}</span></div>`).join('');
+    $('#topGrid').innerHTML = LISTINGS.filter((p) => p.top).concat(LISTINGS.filter((p) => !p.top)).slice(0, 6).map(card).join('');
+    $('#services').innerHTML = SERVICES.map((s) => `<div class="service reveal"><div class="ico">${icon(s.icon, 22)}</div><h3>${s.title}</h3><p class="muted">${s.text}</p></div>`).join('');
+    $('#partners').innerHTML = PARTNERS.map((p) => `<div class="partner reveal">
+      <div class="partner-main">
+        <div class="partner-brand"><span class="logo-mark partner-mark">${icon('house', 26)}</span><div><b>${p.name}</b><span class="muted">${p.kind}</span></div></div>
+        <h3 class="display">${p.title}</h3>
+        <p class="muted">${p.text}</p>
+        <a class="btn btn-primary" href="contacts.html">${icon('send', 16)} Обговорити проєкт</a>
+      </div>
+      <div class="partner-services">${p.services.map((s) => `<div class="partner-svc"><span class="ico">${icon(s.icon, 20)}</span><div><b>${s.title}</b><span class="muted">${s.text}</span></div></div>`).join('')}</div>
+    </div>`).join('');
+    $('#reviews').innerHTML = REVIEWS.map((r) => `<div class="review reveal"><div class="stars">★★★★★</div><p>«${r.text}»</p><b>${r.name}</b></div>`).join('');
+    $('#ctaForm').innerHTML = leadForm('Безкоштовна оцінка');
+    $('#arr1').innerHTML = icon('arrow', 16);
+    bindForm($('#ctaForm form'));
+  </script>
+</body>
+</html>

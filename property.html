@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Об'єкт — Glory Estate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;1,9..144,500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="assets/js/theme.js"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body data-page="property">
+  <div id="header"></div>
+
+  <main class="container" id="main"></main>
+
+  <div id="footer"></div>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/app.js"></script>
+  <script>
+    const { $, card, icon, art, money, priceLabel, bindForm, leadForm, syncFavs, reveal } = UI;
+    const id = new URLSearchParams(location.search).get('id');
+    const p = LISTINGS.find((x) => x.id === id) || LISTINGS[0];
+    const ag = AGENTS.find((a) => a.id === p.agent);
+    document.title = `${p.title}, ${p.district} — ${AGENCY.name}`;
+    const perM2 = p.deal === 'sale' ? `<span class="muted">${money(Math.round(p.price / p.area))} за м²</span>` : '<span class="muted">комунальні окремо</span>';
+    const similar = LISTINGS.filter((x) => x.id !== p.id && (x.type === p.type || x.district === p.district)).slice(0, 3);
+    const mapQ = encodeURIComponent(`${p.city}, ${p.address}`);
+    const FACADES = [['#2f2c28', 'Графіт'], ['#ece6da', 'Слонова кістка'], ['#d9c3a5', 'Пісок'], ['#8fa98a', 'Шавлія'], ['#a0533a', 'Цегла'], ['#2e4565', 'Нічний синій'], ['#c49a3c', 'Золото']];
+
+    $('#main').innerHTML = `
+      <div class="crumbs"><a href="index.html">Головна</a> / <a href="catalog.html?deal=${p.deal}">${p.deal === 'rent' ? 'Оренда' : 'Продаж'}</a> / ${p.title}</div>
+      <div class="prop-head">
+        <div><span class="eyebrow">${p.deal === 'rent' ? 'Оренда' : 'Продаж'} · ${p.type} · ID ${p.id.toUpperCase()}</span>
+          <h1 style="font-size:clamp(1.7rem,3.5vw,2.6rem)">${p.title}</h1>
+          <div class="muted">${icon('pin', 16)} ${p.city}, ${p.district}, ${p.address}</div></div>
+        <div style="text-align:right"><div class="price" style="font-size:2rem">${priceLabel(p)}</div>${perM2}</div>
+      </div>
+      <div class="gallery" id="gallery"></div>
+      <div class="art-tools">
+        <div><span class="muted">Приміряйте фасад</span><div class="swatches" id="facade">
+          ${[['', 'Як є'], ...FACADES].map(([c, t]) => `<button class="sw${c ? '' : ' sw-reset on'}" data-c="${c}" style="--c:${c || p.palette[1]}" title="${t}" aria-label="${t}"></button>`).join('')}
+        </div></div>
+        <div><span class="muted">Небо</span><div class="pills" id="sky">
+          ${[['', 'Як зараз у Києві'], ['day', 'День'], ['dusk', 'Захід'], ['night', 'Ніч']].map(([v, t]) => `<button data-v="${v}" class="${v ? '' : 'on'}">${t}</button>`).join('')}
+        </div></div>
+      </div>
+      <div class="prop-grid">
+        <div>
+          <div class="specs">
+            <div class="spec"><span class="muted">Площа</span><b>${p.area} м²</b></div>
+            <div class="spec"><span class="muted">Кімнат</span><b>${p.rooms}</b></div>
+            <div class="spec"><span class="muted">Поверх</span><b>${p.floor} з ${p.floors}</b></div>
+            <div class="spec"><span class="muted">Рік</span><b>${p.year}</b></div>
+          </div>
+          <h2 style="font-size:1.5rem">Опис</h2>
+          <p>${p.description}</p>
+          <div class="tags">${p.features.map((f) => `<span class="tag">${f}</span>`).join('')}</div>
+          <h2 style="font-size:1.5rem">Розташування</h2>
+          <div class="map"><iframe title="Карта" width="100%" height="100%" style="border:0" loading="lazy"
+            src="https://maps.google.com/maps?q=${mapQ}&z=14&output=embed"></iframe></div>
+        </div>
+        <aside class="side">
+          <div class="box">
+            <div class="agent"><div class="avatar">${ag.initials}</div><div><b>${ag.name}</b><div class="muted" style="font-size:.9rem">${ag.role}</div></div></div>
+            <a class="btn btn-primary btn-block" href="tel:${ag.phone.replace(/[^\d+]/g, '')}">${icon('phone', 16)} ${ag.phone}</a>
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <a class="btn btn-ghost" style="flex:1" href="${AGENCY.telegram}">Telegram</a>
+              <button class="btn btn-ghost" style="flex:1" data-fav="${p.id}">${icon('heart', 16)} Обране</button>
+            </div>
+            <hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+            <div id="leadBox"></div>
+          </div>
+          ${p.deal === 'sale' ? `<div class="box calc">
+            <h3>Іпотечний калькулятор</h3>
+            <div class="field"><label>Перший внесок: <span id="dpL"></span></label><input type="range" id="dp" min="20" max="70" value="30"></div>
+            <div class="field"><label>Термін: <span id="yrL"></span></label><input type="range" id="yr" min="5" max="20" value="15"></div>
+            <div class="field"><label>Ставка, % річних</label><input id="rate" inputmode="decimal" value="7"></div>
+            <span class="muted">Щомісячний платіж</span><output id="pay"></output>
+            <p class="muted" style="font-size:.8rem;margin:8px 0 0">Орієнтовно, за програмою «єОселя» ставка 3–7 %.</p>
+          </div>` : ''}
+        </aside>
+      </div>
+      ${similar.length ? `<section class="section" style="padding-bottom:0"><div class="section-head"><h2>Схожі об'єкти</h2></div><div class="grid">${similar.map(card).join('')}</div></section>` : ''}`;
+
+    // галерея з «примірочною»: колір фасаду й небо
+    const look = {};
+    const drawGallery = () => { $('#gallery').innerHTML = `<div class="main">${art(p, 0, look)}</div><div>${art(p, 1, look)}</div><div>${art(p, 2, look)}</div>`; };
+    const pick = (box, key, attr) => $(box).addEventListener('click', (e) => {
+      const b = e.target.closest('button'); if (!b) return;
+      look[key] = b.dataset[attr] || undefined;
+      $(box).querySelectorAll('button').forEach((x) => x.classList.toggle('on', x === b));
+      drawGallery();
+    });
+    pick('#facade', 'facade', 'c'); pick('#sky', 'phase', 'v');
+    drawGallery();
+
+    $('#leadBox').innerHTML = leadForm('Записатися на перегляд');
+    bindForm($('#leadBox form'));
+    if (p.deal === 'sale') {
+      const calc = () => {
+        const dp = +$('#dp').value, yr = +$('#yr').value, r = (parseFloat($('#rate').value.replace(',', '.')) || 0) / 1200;
+        const loan = p.price * (1 - dp / 100), n = yr * 12;
+        const pay = r ? loan * r / (1 - Math.pow(1 + r, -n)) : loan / n;
+        $('#dpL').textContent = `${dp}% · ${money(Math.round(p.price * dp / 100))}`;
+        $('#yrL').textContent = `${yr} років`;
+        $('#pay').textContent = money(Math.round(pay));
+      };
+      ['#dp', '#yr', '#rate'].forEach((s) => $(s).addEventListener('input', calc)); calc();
+    }
+    syncFavs(); reveal();
+  </script>
+</body>
+</html>
