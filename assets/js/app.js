@@ -35,6 +35,7 @@
       house: '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 9.6V20h13V9.6"/><path d="M10 20v-5.5h4V20"/><path d="M16 6.6V4.5h2.2v4"/>',
       palette: '<path d="M12 2a10 10 0 0 0 0 20c1 0 1.7-.8 1.7-1.7 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.8-1.7 1.7-1.7H17a5 5 0 0 0 5-5C22 6 17.5 2 12 2z"/><circle cx="7.5" cy="11.5" r="1"/><circle cx="10" cy="7" r="1"/><circle cx="15" cy="7" r="1"/>',
       check: '<path d="M20 6 9 17l-5-5"/>',
+      close: '<path d="M18 6 6 18M6 6l12 12"/>',
       hammer: '<path d="m15 12-8.4 8.4a2.1 2.1 0 0 1-3-3L12 9"/><path d="M17.6 15 22 10.6M20.9 11.7l-1.3-1.3c-.6-.6-.9-1.3-.9-2.1v-.9L16.5 5.2a6 6 0 0 0-4.2-1.7H9.6l.9.9a6.5 6.5 0 0 1 1.9 4.4v1.6l2 2h1c.8 0 1.5.3 2.1.9l1.3 1.3"/>',
       pen: '<path d="m12 19 7-7 3 3-7 7-3-3z"/><path d="m18 13-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="m2 2 7.6 7.6"/><circle cx="11" cy="11" r="2"/>',
       roller: '<rect x="2" y="2" width="16" height="6" rx="2"/><path d="M10 16v-2a2 2 0 0 1 2-2h8a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="8" y="16" width="4" height="6" rx="1"/>',
@@ -263,7 +264,7 @@
           ${paletteMenu()}
           <button class="icon-btn" id="themeBtn" title="Світла / темна тема"></button>
           <a class="btn btn-primary" href="tel:${A.phoneHref}">${icon('phone', 16)} ${A.phone}</a>
-          <button class="icon-btn burger" id="burger" aria-label="Меню">${icon('menu', 18)}</button>
+          <button class="icon-btn burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="mmenu">${icon('menu', 20)}</button>
         </div>
       </div></header>`;
     $('#footer').innerHTML = `
@@ -282,7 +283,32 @@
       ? `<a class="btn btn-ghost" href="#leadBox">${icon('calendar', 18)} Перегляд</a>`
       : `<a class="btn btn-ghost" href="${A.telegram}">${icon('send', 18)} Telegram</a>`);
     document.body.appendChild(bar);
-    $('#burger').onclick = () => $('#nav').classList.toggle('open');
+    // мобільне меню на весь екран: розділи, палітра, контакти
+    const mm = document.createElement('div');
+    mm.className = 'mmenu'; mm.id = 'mmenu'; mm.hidden = true;
+    mm.innerHTML = `
+      <nav class="mm-links">${nav.map(([h, t, k], i) => `<a href="${h}" class="${active(k) ? 'active' : ''}" style="--i:${i}"><span>0${i + 1}</span>${t}${icon('arrow', 22)}</a>`).join('')}</nav>
+      <div class="mm-block" style="--i:4"><div class="pal-title">Палітра</div>
+        <div class="mm-pals">${Object.entries(window.THEME.palettes).map(([k, v]) => `<button class="mm-pal" data-pal="${k}" title="${v.name}" aria-label="${v.name}"><span class="pal-sw" style="--a:${v.swatch[0]};--b:${v.swatch[1]}"></span></button>`).join('')}</div>
+        <div class="tabs pal-modes"><button data-mode="light">${icon('sun', 16)} Світла</button><button data-mode="dark">${icon('moon', 16)} Темна</button></div></div>
+      <div class="mm-block mm-contacts" style="--i:5">
+        <a class="btn btn-primary btn-block" href="tel:${A.phoneHref}">${icon('phone', 18)} ${A.phone}</a>
+        <div class="mm-row"><a class="btn btn-ghost" href="${A.telegram}">Telegram</a><a class="btn btn-ghost" href="${A.instagram}">Instagram</a></div>
+        <p class="muted">${icon('clock', 16)} ${A.hours}</p></div>`;
+    document.body.appendChild(mm);
+    const burger = $('#burger');
+    const setMenu = (on) => {
+      mm.hidden = !on; document.body.classList.toggle('menu-open', on);
+      burger.setAttribute('aria-expanded', on); burger.innerHTML = icon(on ? 'close' : 'menu', 20);
+    };
+    burger.onclick = () => setMenu(mm.hidden);
+    mm.addEventListener('click', (e) => {
+      const b = e.target.closest('button[data-pal], button[data-mode]');
+      if (b) return window.THEME.change(b.dataset.pal ? { palette: b.dataset.pal } : { theme: b.dataset.mode }, b);
+      if (e.target.closest('a')) setMenu(false);
+    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !mm.hidden) { setMenu(false); burger.focus(); } });
+    matchMedia('(min-width: 721px)').addEventListener('change', (e) => { if (e.matches) setMenu(false); });
     // тема й палітра (стан і застосування — у theme.js)
     const T = window.THEME, menu = $('#palMenu'), palBtn = $('#palBtn');
     const openMenu = (on) => { menu.hidden = !on; palBtn.setAttribute('aria-expanded', on); };

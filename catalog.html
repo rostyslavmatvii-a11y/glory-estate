@@ -22,8 +22,9 @@
     </div>
 
     <div class="catalog">
+      <div class="sheet-backdrop" id="filtersBackdrop"></div>
       <aside class="filters" id="filters">
-        <h3>Фільтри <button class="btn btn-ghost" id="reset" style="padding:6px 10px;font-size:.85rem">Скинути</button></h3>
+        <h3>Фільтри <span class="sheet-x"><button class="icon-btn" id="filtersClose" aria-label="Закрити фільтри"></button></span><button class="btn btn-ghost" id="reset" style="padding:6px 10px;font-size:.85rem">Скинути</button></h3>
         <div class="field"><label>Угода</label><div class="pills" data-key="deal">
           <button data-v="">Усі</button><button data-v="sale">Продаж</button><button data-v="rent">Оренда</button></div></div>
         <div class="field"><label>Тип</label><div class="pills" data-key="type">
@@ -35,6 +36,7 @@
         <div class="field"><label>Ціна, ₴</label><div class="row2"><input id="fMin" inputmode="numeric" placeholder="від"><input id="fMax" inputmode="numeric" placeholder="до"></div></div>
         <div class="field"><label>Площа, м²</label><div class="row2"><input id="fAreaMin" inputmode="numeric" placeholder="від"><input id="fAreaMax" inputmode="numeric" placeholder="до"></div></div>
         <div class="field" style="margin:0"><label><input type="checkbox" id="fFav" style="width:auto;margin-right:6px">Лише обране</label></div>
+        <div class="sheet-foot"><button class="btn btn-primary btn-block" id="filtersApply"></button></div>
       </aside>
 
       <section>
@@ -93,6 +95,9 @@
       const t = st.fav ? 'Обране' : st.deal === 'rent' ? 'Оренда нерухомості' : st.deal === 'sale' ? 'Продаж нерухомості' : 'Каталог нерухомості';
       $('#title').textContent = t; $('#crumb').textContent = t; document.title = t + ' — ' + AGENCY.name;
       const n = list.length;
+      $('#filtersApply').textContent = n ? `Показати ${n}` : 'Нічого не знайдено';
+      const active = ['deal', 'type', 'rooms', 'city', 'district', 'min', 'max', 'areaMin', 'areaMax', 'fav'].filter((k) => st[k]).length;
+      $('#filtersToggle').innerHTML = icon('filter', 16) + ' Фільтри' + (active ? ` <span class="f-badge">${active}</span>` : '');
       $('#count').textContent = `Знайдено ${n} ${n % 10 === 1 && n % 100 !== 11 ? "об'єкт" : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? "об'єкти" : "об'єктів"}`;
       $('#grid').innerHTML = n ? list.map(card).join('') :
         `<div class="empty" style="grid-column:1/-1"><h3>Нічого не знайшли</h3><p class="muted">Спробуйте змінити фільтри — або залиште заявку, і ми підберемо варіанти, яких ще немає на сайті.</p><a class="btn btn-primary" href="contacts.html">Залишити заявку</a></div>`;
@@ -110,8 +115,11 @@
     $('#fFav').onchange = (e) => { st.fav = e.target.checked; render(); };
     $('#sort').onchange = (e) => { st.sort = e.target.value; render(); };
     $('#reset').onclick = () => { Object.assign(st, { deal: '', type: '', rooms: '', city: '', district: '', min: '', max: '', areaMin: '', areaMax: '', fav: false }); syncControls(); render(); };
-    $('#filtersToggle').innerHTML = icon('filter', 16) + ' Фільтри';
-    $('#filtersToggle').onclick = () => $('#filters').classList.toggle('open');
+    // на телефоні фільтри — шторка знизу
+    const sheet = (on) => { $('#filters').classList.toggle('open', on); $('#filtersBackdrop').classList.toggle('open', on); document.body.classList.toggle('sheet-open', on); };
+    $('#filtersToggle').onclick = () => sheet(true);
+    $('#filtersClose').innerHTML = icon('close', 18);
+    ['#filtersClose', '#filtersApply', '#filtersBackdrop'].forEach((s) => $(s).addEventListener('click', () => sheet(false)));
     document.addEventListener('click', (e) => { if (e.target.closest('[data-fav]') && st.fav) setTimeout(render, 0); });
     syncControls(); render();
   </script>
