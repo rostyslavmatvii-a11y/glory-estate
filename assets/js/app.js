@@ -263,7 +263,7 @@
           <a class="icon-btn" href="catalog.html?fav=1" title="Обране">${icon('heart', 18)}<span class="badge" id="favCount" hidden>0</span></a>
           ${paletteMenu()}
           <button class="icon-btn" id="themeBtn" title="Світла / темна тема"></button>
-          <a class="btn btn-primary" href="tel:${A.phoneHref}">${icon('phone', 16)} ${A.phone}</a>
+          <a class="btn btn-primary header-call" href="tel:${A.phoneHref}">${icon('phone', 16)} <span>${A.phone}</span></a>
           <button class="icon-btn burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="mmenu">${icon('menu', 20)}</button>
         </div>
       </div></header>`;

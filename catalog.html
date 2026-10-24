@@ -117,7 +117,7 @@
     $('#reset').onclick = () => { Object.assign(st, { deal: '', type: '', rooms: '', city: '', district: '', min: '', max: '', areaMin: '', areaMax: '', fav: false }); syncControls(); render(); };
     // на телефоні фільтри — шторка знизу
     const sheet = (on) => { $('#filters').classList.toggle('open', on); $('#filtersBackdrop').classList.toggle('open', on); document.body.classList.toggle('sheet-open', on); };
-    $('#filtersToggle').onclick = () => sheet(true);
+    $('#filtersToggle').onclick = () => sheet(!$('#filters').classList.contains('open'));
     $('#filtersClose').innerHTML = icon('close', 18);
     ['#filtersClose', '#filtersApply', '#filtersBackdrop'].forEach((s) => $(s).addEventListener('click', () => sheet(false)));
     document.addEventListener('click', (e) => { if (e.target.closest('[data-fav]') && st.fav) setTimeout(render, 0); });

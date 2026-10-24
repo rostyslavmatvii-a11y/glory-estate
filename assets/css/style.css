@@ -488,3 +488,12 @@ html.doors-closed body > * { visibility: hidden; }
   .footer { padding: 28px 0; margin-top: 24px; }
   .footer .container { gap: 18px; }
 }
+
+/* вузький десктоп / планшет: шапка в один рядок */
+.logo, .header-call { white-space: nowrap; }
+@media (min-width: 721px) and (max-width: 1100px) {
+  .header .container { gap: 16px; }
+  .nav { gap: 16px; }
+  .header-call { padding: 0; width: 40px; height: 40px; }
+  .header-call span { display: none; }
+}
