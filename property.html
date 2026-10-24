@@ -36,7 +36,7 @@
         <div><span class="eyebrow">${p.deal === 'rent' ? 'Оренда' : 'Продаж'} · ${p.type} · ID ${p.id.toUpperCase()}</span>
           <h1 style="font-size:clamp(1.7rem,3.5vw,2.6rem)">${p.title}</h1>
           <div class="muted">${icon('pin', 16)} ${p.city}, ${p.district}, ${p.address}</div></div>
-        <div style="text-align:right"><div class="price" style="font-size:2rem">${priceLabel(p)}</div>${perM2}</div>
+        <div class="prop-price"><div class="price" style="font-size:2rem">${priceLabel(p)}</div>${perM2}</div>
       </div>
       <div class="gallery" id="gallery"></div>
       <div class="art-tools">
@@ -83,7 +83,7 @@
           </div>` : ''}
         </aside>
       </div>
-      ${similar.length ? `<section class="section" style="padding-bottom:0"><div class="section-head"><h2>Схожі об'єкти</h2></div><div class="grid">${similar.map(card).join('')}</div></section>` : ''}`;
+      ${similar.length ? `<section class="section" style="padding-bottom:0"><div class="section-head"><h2>Схожі об'єкти</h2></div><div class="grid snap">${similar.map(card).join('')}</div></section>` : ''}`;
 
     // галерея з «примірочною»: колір фасаду й небо
     const look = {};

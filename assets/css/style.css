@@ -383,3 +383,54 @@ html.doors-closed body > * { visibility: hidden; }
 .door-l .door-handle { right: 14px; }
 .door-r .door-handle { left: 14px; }
 @media (prefers-reduced-motion: reduce) { #doors { display: none; } }
+
+/* ---------- мобільна версія ---------- */
+.mbar { display: none; }
+.prop-price { text-align: right; }
+@media (max-width: 720px) {
+  .demo-bar { font-size: .75rem; padding: 5px 12px; }
+  .header .container { height: 60px; }
+  .nav { top: 60px; }
+  .logo small { font-size: .62rem; }
+  .icon-btn { width: 42px; height: 42px; }
+  h1 { font-size: clamp(1.9rem, 8.5vw, 2.4rem); }
+  .hero { padding: 28px 0 24px; }
+  .hero p.lead { font-size: 1.02rem; }
+  .hero-art .f1 { display: none; }
+  .hero-art .float { font-size: .78rem; }
+  .section-head { margin-bottom: 18px; }
+
+  /* нижня панель: дзвінок завжди під пальцем */
+  .mbar { display: flex; gap: 10px; position: fixed; left: 0; right: 0; bottom: 0; z-index: 25;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); border-top: 1px solid var(--line); }
+  .mbar .btn { flex: 1; padding: 13px 12px; }
+  .mbar .btn-ghost { background: var(--surface); }
+  body { padding-bottom: calc(70px + env(safe-area-inset-bottom)); }
+
+  /* гортання карток пальцем замість довгого стовпчика */
+  .snap { display: grid; grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: 84%; gap: 14px;
+    overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 16px; margin: 0 -16px; padding: 4px 16px 12px;
+    scrollbar-width: none; overscroll-behavior-x: contain; }
+  .snap::-webkit-scrollbar { display: none; }
+  .snap > * { scroll-snap-align: start; }
+  .services.snap { grid-auto-columns: 72%; }
+  .card:hover { transform: none; }
+
+  /* галерея об'єкта — свайп між трьома кадрами */
+  .gallery { display: flex; height: auto; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; border-radius: 16px; scrollbar-width: none; }
+  .gallery::-webkit-scrollbar { display: none; }
+  .gallery > *, .gallery > :not(.main) { display: block; flex: 0 0 88%; height: 250px; scroll-snap-align: center; border-radius: 16px; overflow: hidden; }
+  .gallery > :last-child { flex-basis: 100%; }
+  .prop-price { text-align: left; }
+  .prop-head { gap: 10px; }
+
+  /* каталог */
+  .toolbar { flex-wrap: nowrap; }
+  .toolbar select { max-width: 55%; }
+  .filters-toggle { width: 100%; }
+  .section-head:has(.filters-toggle) { flex-direction: column; align-items: stretch; }
+
+  .pills button { padding: 8px 14px; }
+  .partner-services { gap: 10px; }
+}

@@ -275,6 +275,13 @@
         <div><b style="color:var(--ink)">Контакти</b><br><br><a href="tel:${A.phoneHref}">${A.phone}</a><a href="mailto:${A.email}">${A.email}</a>
           <a href="${A.telegram}">Telegram</a><a href="${A.instagram}">Instagram</a></div>
       </div></footer>`;
+    // нижня панель дій на телефоні (у шапці кнопка дзвінка там прихована)
+    const bar = document.createElement('nav');
+    bar.className = 'mbar'; bar.setAttribute('aria-label', 'Швидкі дії');
+    bar.innerHTML = `<a class="btn btn-primary" href="tel:${A.phoneHref}">${icon('phone', 18)} Подзвонити</a>` + (page === 'property'
+      ? `<a class="btn btn-ghost" href="#leadBox">${icon('calendar', 18)} Перегляд</a>`
+      : `<a class="btn btn-ghost" href="${A.telegram}">${icon('send', 18)} Telegram</a>`);
+    document.body.appendChild(bar);
     $('#burger').onclick = () => $('#nav').classList.toggle('open');
     // тема й палітра (стан і застосування — у theme.js)
     const T = window.THEME, menu = $('#palMenu'), palBtn = $('#palBtn');
